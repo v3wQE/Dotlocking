@@ -1,226 +1,308 @@
-_G.KEY = "c"
-		_G.PART = "HumanoidRootPart"
-		_G.PRED = 0.057
-		_G.Frame = Vector3.new(0, 0.53, 0)
-		local L_76_ = game:GetService "Workspace".CurrentCamera
-		local L_77_
-		local L_78_ = false
-		local L_79_ = nil
-		local L_80_ = game.Players.LocalPlayer:GetMouse()
-		local L_81_ = Instance.new("Part", game.Workspace)
-		local L_82_ = Instance.new("Folder", game.CoreGui)
-		function makemarker(L_86_arg0, L_87_arg1, L_88_arg2, L_89_arg3, L_90_arg4)
-			local L_91_ = Instance.new("BillboardGui", L_86_arg0)
-			L_91_.Name = "PP"
-			L_91_.Adornee = L_87_arg1
-			L_91_.Size = UDim2.new(L_89_arg3, L_90_arg4, L_89_arg3, L_90_arg4)
-			L_91_.AlwaysOnTop = true
-			local L_92_ = Instance.new("Frame", L_91_)
-			L_92_.Size = UDim2.new(4, 0, 4, 0)
-			L_92_.BackgroundTransparency = 0.1
-			L_92_.BackgroundColor3 = L_88_arg2
-			local L_93_ = Instance.new("UICorner", L_92_)
-			L_93_.CornerRadius = UDim.new(50, 50)
-			return L_91_
-		end
-		local L_83_ = game.Players:GetPlayers()
-		function noob(L_94_arg0)
-			local L_95_
-			repeat
-				wait()
-			until L_94_arg0.Character
-			local L_96_ = makemarker(L_82_, L_94_arg0.Character:WaitForChild(_G.PART), Color3.fromRGB(255, 255, 255), 0.0, 0)
-			L_96_.Name = L_94_arg0.Name
-			L_94_arg0.CharacterAdded:connect(
-				function(L_98_arg0)
-					L_96_.Adornee = L_98_arg0:WaitForChild(_G.PART)
-				end
-			)
-			local L_97_ = Instance.new("TextLabel", L_96_)
-			L_97_.BackgroundTransparency = 1
-			L_97_.Position = UDim2.new(0, 0, 0, -50)
-			L_97_.Size = UDim2.new(0, 100, 0, 100)
-			L_97_.Font = Enum.Font.SourceSansSemibold
-			L_97_.TextSize = 14
-			L_97_.TextColor3 = Color3.new(1, 1, 1)
-			L_97_.TextStrokeTransparency = 0
-			L_97_.TextYAlignment = Enum.TextYAlignment.Bottom
-			L_97_.Text = "Bling" .. L_94_arg0.Name
-			L_97_.ZIndex = 10
-			spawn(
-				function()
-					while wait() do
-						if L_94_arg0.Character then
-						end
-					end
-				end
-			)
-		end
-		for L_99_forvar0 = 1, #L_83_ do
-			if L_83_[L_99_forvar0] ~= game.Players.LocalPlayer then
-				noob(L_83_[L_99_forvar0])
-			end
-		end
-		game.Players.PlayerAdded:connect(
-			function(L_100_arg0)
-				noob(L_100_arg0)
-			end
-		)
-		game.Players.PlayerRemoving:Connect(
-			function(L_101_arg0)
-				L_82_[L_101_arg0.Name]:Destroy()
-			end
-		)
-		spawn(
-			function()
-				L_81_.Anchored = true
-				L_81_.CanCollide = false
-				L_81_.Size = Vector3.new(0.1, 0.1, 0.1)
-				L_81_.Transparency = 0.1
-				makemarker(L_81_, L_81_, Color3.fromRGB(0, 180, 0), 0.20, 0)
-			end
-		)
-		L_80_.KeyDown:Connect(
-			function(L_102_arg0)
-				if L_102_arg0 ~= _G.KEY then
-					return
-				end
-				if L_78_ then
-					L_78_ = false
-					TextLabel.TextColor3 = Color3.fromRGB(255, 20, 75)
-					TextLabel.Text = "------"
-				else
-					L_78_ = true
-					L_77_ = getClosestPlayerToCursor()
-					TextLabel.TextColor3 = Color3.fromRGB(12, 255, 0)
-					TextLabel.Text = L_77_.Character.Humanoid.DisplayName
-				end
-			end
-		)
-		function getClosestPlayerToCursor()
-			local L_103_
-			local L_104_ = math.huge
-			for L_105_forvar0, L_106_forvar1 in pairs(game.Players:GetPlayers()) do
-				if
-					L_106_forvar1 ~= game.Players.LocalPlayer and L_106_forvar1.Character and L_106_forvar1.Character:FindFirstChild("Humanoid") and
-					L_106_forvar1.Character.Humanoid.Health ~= 0 and
-					L_106_forvar1.Character:FindFirstChild(_G.PART)
-				then
-					local L_107_ = L_76_:WorldToViewportPoint(L_106_forvar1.Character.PrimaryPart.Position)
-					local L_108_ = (Vector2.new(L_107_.X, L_107_.Y) - Vector2.new(L_80_.X, L_80_.Y)).magnitude
-					if L_108_ < L_104_ then
-						L_103_ = L_106_forvar1
-						L_104_ = L_108_
-					end
-				end
-			end
-			return L_103_
-		end
-		game:GetService "RunService".Stepped:connect(
-			function()
-				if L_78_ and L_77_.Character and L_77_.Character:FindFirstChild(_G.PART) then
-					L_81_.CFrame =
-						CFrame.new(L_77_.Character[_G.PART].Position + _G.Frame + L_77_.Character[_G.PART].Velocity * L_79_)
-				else
-					L_81_.CFrame = CFrame.new(0, 9999, 0)
-				end
-			end
-		)
-		local L_84_ = getrawmetatable(game)
-		local L_85_ = L_84_.__namecall
-		setreadonly(L_84_, false)
-		L_84_.__namecall =
-			newcclosure(
-				function(...)
-				local L_109_ = {
-					...
-				}
-				if L_78_ and getnamecallmethod() == "FireServer" and L_109_[2] == "UpdateMousePos" then
-					L_109_[3] = L_77_.Character[_G.PART].Position + _G.Frame + L_77_.Character[_G.PART].Velocity * L_79_
-					return L_85_(unpack(L_109_))
-				end
-				return L_85_(...)
-			end
-			)
-		game.Players.LocalPlayer.Chatted:Connect(
-			function(L_110_arg0)
-				if L_110_arg0 == "/e print" then
-					print(_G.PRED)
-				end
-			end
-		)
-		game.Players.LocalPlayer.Chatted:Connect(
-			function(L_111_arg0)
-				if L_111_arg0 == "Code:1029" then
-					_G.KEY = nil
-					_G.AIR = nil
-					_G.PART = nil
-					_G.PRED = nil
-					TextLabel.Visible = false
-				end
-			end
-		)
-		game.Players.LocalPlayer.Chatted:Connect(
-			function(L_112_arg0)
-				if L_112_arg0 == "/e hrp" then
-					_G.KEY = "c"
-					_G.AIR = 0.00005
-					_G.PART = "HumanoidRootPart"
-					_G.PRED = 0.032
-					TextLabel.Visible = true
-				end
-			end
-		)
-		game.Players.LocalPlayer.Chatted:Connect(
-			function(L_113_arg0)
-				if L_113_arg0 == "/e lt" then
-					_G.KEY = "c"
-					_G.AIR = 0.00005
-					_G.PART = "LowerTorso"
-					_G.PRED = 0.032
-					TextLabel.Visible = true
-				end
-			end
-		)
-		game.Players.LocalPlayer.Chatted:Connect(
-			function(L_114_arg0)
-				if L_114_arg0 == "Screensharing" then
-					_G.KEY = "c"
-					_G.AIR = 0.00005
-					_G.PART = "LowerTorso"
-					_G.PRED = 0.033
-					TextLabel.Visible = true
-					L_81_ = nil
-				end
-			end
-		)
-		game.Players.LocalPlayer.Chatted:Connect(
-			function(L_115_arg0)
-				if L_115_arg0 == "/e P+" then
-					_G.PRED = _G.PRED + 0.001
-				end
-			end
-		)
-		game.Players.LocalPlayer.Chatted:Connect(
-			function(L_116_arg0)
-				if L_116_arg0 == "/e P-" then
-					_G.PRED = _G.PRED - 0.001
-				end
-			end
-		)
-		while wait() do
-			if
-				getClosestPlayerToCursor().Character.Humanoid.Jump == true and
-				getClosestPlayerToCursor().Character.Humanoid.FloorMaterial == Enum.Material.Air
-			then
-				_G.Frame = Vector3.new(0, -2.3, 0)
-				wait(0.05)
-			else
-				local L_117_ = game:GetService("Stats").Network.ServerStatsItem["Data Ping"]:GetValueString()
-				local L_118_ = tostring(L_117_)
-				local L_119_ = L_118_:split(" ")
-				local L_120_ = L_119_[1]
-				L_79_ = L_120_ / 1000 + _G.PRED
-				_G.Frame = Vector3.new(0, 0.53, 0)
-			end
-		end
+ local function callback(Text)
+ if Text == "Button1 text" then
+  print ("Answer")
+elseif Text == ("Button2 text") then
+ print ("Answer2")
+ end
+end
+
+local NotificationBindable = Instance.new("BindableFunction")
+NotificationBindable.OnInvoke = callback
+--
+game.StarterGui:SetCore("SendNotification",  {
+ Title = "Made By Kxrit Hub";
+ Text = "I Hope You Enjoin :)";
+ Icon = "";
+ Duration = 5;
+ Callback = NotificationBindable;
+})
+
+local Settings = {
+    rewrittenmain = {
+        Enabled = true,
+        Key = "c",
+        DOT = true,
+        AIRSHOT = true,
+        NOTIF = true,
+        AUTOPRED = true,
+        FOV = math.huge,
+        RESOVLER = true
+    }
+}
+ 
+local SelectedPart = "HumanoidRootPart"
+local Prediction = true
+local PredictionValue = 0.132973524154
+
+ 
+ 
+    local AnchorCount = 0
+    local MaxAnchor = 50
+ 
+    local CC = game:GetService"Workspace".CurrentCamera
+    local accomidationfactor = 0.11
+    local mouse = game.Players.LocalPlayer:GetMouse()
+    local placemarker = Instance.new("Part", game.Workspace)
+    local enabled = false
+    local Plr
+ 
+    function makemarker(Parent, Adornee, Color, Size, Size2)
+        local e = Instance.new("BillboardGui", Parent)
+        e.Name = "PP"
+        e.Adornee = Adornee
+        e.Size = UDim2.new(Size, Size2, Size, Size2)
+        e.AlwaysOnTop = Settings.rewrittenmain.DOT
+        local a = Instance.new("Frame", e)
+        if Settings.rewrittenmain.DOT == true then
+        a.Size = UDim2.new(1, 0, 1, 0)
+        else
+        a.Size = UDim2.new(0, 0, 0, 0)
+        end
+        if Settings.rewrittenmain.DOT == true then
+        a.Transparency = 0
+        a.BackgroundTransparency = 0
+        else
+        a.Transparency = 1
+        a.BackgroundTransparency = 1
+        end
+        a.BackgroundColor3 = Color
+        local g = Instance.new("UICorner", a)
+        if Settings.rewrittenmain.DOT == false then
+        g.CornerRadius = UDim.new(0, 0)
+        else
+        g.CornerRadius = UDim.new(1, 1) 
+        end
+        return(e)
+    end
+ 
+ 
+    local data = game.Players:GetPlayers()
+    function noob(player)
+        local character
+        repeat wait() until player.Character
+        local handler = makemarker(guimain, player.Character:WaitForChild(SelectedPart), Color3.fromRGB(107, 184, 255), 0.3, 3)
+        handler.Name = player.Name
+        player.CharacterAdded:connect(function(Char) handler.Adornee = Char:WaitForChild(SelectedPart) end)
+ 
+ 
+        spawn(function()
+            while wait() do
+                if player.Character then
+                end
+            end
+        end)
+    end
+ 
+    for i = 1, #data do
+        if data[i] ~= game.Players.LocalPlayer then
+            noob(data[i])
+        end
+    end
+ 
+    game.Players.PlayerAdded:connect(function(Player)
+        noob(Player)
+    end)
+ 
+    spawn(function()
+        placemarker.Anchored = true
+        placemarker.CanCollide = false
+        if Settings.rewrittenmain.DOT == true then
+        placemarker.Size = Vector3.new(0, 0, 0)
+        else
+        placemarker.Size = Vector3.new(0, 0, 0)
+        end
+        placemarker.Transparency = 0.75
+        if Settings.rewrittenmain.DOT then
+        makemarker(placemarker, placemarker, Color3.fromRGB(0, 255, 60), 0.1000, 0)
+        end
+    end)
+ 
+    game.Players.LocalPlayer:GetMouse().KeyDown:Connect(function(k)
+        if k == Settings.rewrittenmain.Key and Settings.rewrittenmain.Enabled then
+            if enabled == true then
+                enabled = false
+                if Settings.rewrittenmain.NOTIF == true then
+                    Plr = getClosestPlayerToCursor()
+                game.StarterGui:SetCore("SendNotification", {
+                    Title = "Kxrit Hub Dotlock";
+                    Text = "Unlocked",
+                    Duration = 5
+                })
+            end
+            else
+                Plr = getClosestPlayerToCursor()
+                enabled = true
+                if Settings.rewrittenmain.NOTIF == true then
+ 
+                    game.StarterGui:SetCore("SendNotification", {
+                        Title = "Kxrit Hub Dotlock";
+                        Text = "Target: "..tostring(Plr.Character.Humanoid.DisplayName),
+                        Duration = 5
+                    })
+ 
+                end
+            end
+        end
+    end)
+ 
+ 
+ 
+    function getClosestPlayerToCursor()
+        local closestPlayer
+        local shortestDistance = Settings.rewrittenmain.FOV
+ 
+        for i, v in pairs(game.Players:GetPlayers()) do
+            if v ~= game.Players.LocalPlayer and v.Character and v.Character:FindFirstChild("Humanoid") and v.Character.Humanoid.Health ~= 0 and v.Character:FindFirstChild("HumanoidRootPart") then
+                local pos = CC:WorldToViewportPoint(v.Character.PrimaryPart.Position)
+                local magnitude = (Vector2.new(pos.X, pos.Y) - Vector2.new(mouse.X, mouse.Y)).magnitude
+                if magnitude < shortestDistance then
+                    closestPlayer = v
+                    shortestDistance = magnitude
+                end
+            end
+        end
+        return closestPlayer
+    end
+ 
+    local pingvalue = nil;
+    local split = nil;
+    local ping = nil;
+ 
+    game:GetService"RunService".Stepped:connect(function()
+        if enabled and Plr.Character ~= nil and Plr.Character:FindFirstChild("HumanoidRootPart") then
+            placemarker.CFrame = CFrame.new(Plr.Character.HumanoidRootPart.Position+(Plr.Character.HumanoidRootPart.Velocity*accomidationfactor))
+        else
+            placemarker.CFrame = CFrame.new(0, 9999, 0)
+        end
+        if Settings.rewrittenmain.AUTOPRED == true then
+             pingvalue = game:GetService("Stats").Network.ServerStatsItem["Data Ping"]:GetValueString()
+             split = string.split(pingvalue,'(')
+             ping = tonumber(split[1])
+            if ping < 130 then
+                PredictionValue = 0.151
+            elseif ping < 125 then
+                PredictionValue = 0.149
+            elseif ping < 110 then
+                PredictionValue = 0.146
+            elseif ping < 105 then
+                PredictionValue = 0.138
+            elseif ping < 90 then
+                PredictionValue = 0.136
+            elseif ping < 80 then
+                PredictionValue = 0.134
+            elseif ping < 70 then
+                PredictionValue = 0.131
+            elseif ping < 60 then
+                PredictionValue = 0.1229
+            elseif ping < 50 then
+                PredictionValue = 0.1225
+            elseif ping < 40 then
+                PredictionValue = 0.1256
+            end
+        end
+    end)
+ 
+    local mt = getrawmetatable(game)
+    local old = mt.__namecall
+    setreadonly(mt, false)
+    mt.__namecall = newcclosure(function(...)
+        local args = {...}
+        if enabled and getnamecallmethod() == "FireServer" and args[2] == "UpdateMousePos" and Settings.rewrittenmain.Enabled and Plr.Character ~= nil then
+ 
+            -- args[3] = Plr.Character.HumanoidRootPart.Position+(Plr.Character.HumanoidRootPart.Velocity*accomidationfactor)
+            --[[
+            if Settings.rewrittenmain.AIRSHOT == true then
+                if game.Workspace.Players[Plr.Name].Humanoid:GetState() == Enum.HumanoidStateType.Freefall then -- Plr.Character:WaitForChild("Humanoid"):GetState() == Enum.HumanoidStateType.Freefall
+ 
+                    --// Airshot
+                    args[3] = Plr.Character.LeftFoot.Position+(Plr.Character.LeftFoot.Velocity*PredictionValue)
+ 
+                else
+                    args[3] = Plr.Character.HumanoidRootPart.Position+(Plr.Character.HumanoidRootPart.Velocity*PredictionValue)
+ 
+                end
+            else
+                    args[3] = Plr.Character.HumanoidRootPart.Position+(Plr.Character.HumanoidRootPart.Velocity*PredictionValue)
+            end
+            ]]
+            if Prediction == true then
+ 
+            args[3] = Plr.Character[SelectedPart].Position+(Plr.Character[SelectedPart].Velocity*PredictionValue)
+ 
+            else
+ 
+            args[3] = Plr.Character[SelectedPart].Position
+ 
+            end
+ 
+            return old(unpack(args))
+        end
+        return old(...)
+    end)
+ 
+    game:GetService("RunService").RenderStepped:Connect(function()
+        if Settings.rewrittenmain.RESOVLER == true and Plr.Character ~= nil and enabled and Settings.rewrittenmain.Enabled then
+        if Settings.rewrittenmain.AIRSHOT == true and enabled and Plr.Character ~= nil then
+ 
+            if game.Workspace.Players[Plr.Name].Humanoid:GetState() == Enum.HumanoidStateType.Freefall then -- Plr.Character:WaitForChild("Humanoid"):GetState() == Enum.HumanoidStateType.Freefall
+ 
+                --// Airshot
+ 
+                --// Anchor Check
+ 
+                if Plr.Character ~= nil and Plr.Character.HumanoidRootPart.Anchored == true then
+                    AnchorCount = AnchorCount + 1
+                    if AnchorCount >= MaxAnchor then
+                        Prediction = false
+                        wait(2)
+                        AnchorCount = 0;
+                    end
+                else
+                    Prediction = true
+                    AnchorCount = 0;
+                end
+ 
+                SelectedPart = "LeftFoot"
+ 
+            else
+                --// Anchor Check
+ 
+                if Plr.Character ~= nil and Plr.Character.HumanoidRootPart.Anchored == true then
+                    AnchorCount = AnchorCount + 1
+                    if AnchorCount >= MaxAnchor then
+                        Prediction = false
+                        wait(2)
+                        AnchorCount = 0;
+                    end
+                else
+                    Prediction = true
+                    AnchorCount = 0;
+                end
+ 
+                SelectedPart = "HumanoidRootPart"
+ 
+            end
+            else
+ 
+                --// Anchor Check
+ 
+                if Plr.Character ~= nil and Plr.Character.HumanoidRootPart.Anchored == true then
+                    AnchorCount = AnchorCount + 1
+                    if AnchorCount >= MaxAnchor then
+                        Prediction = false
+                        wait(2)
+                        AnchorCount = 0;
+                    end
+                else
+                    Prediction = true
+                    AnchorCount = 0;
+                end
+ 
+                SelectedPart = "HumanoidRootPart"
+            end
+ 
+        else
+                SelectedPart = "HumanoidRootPart"
+        end
+    end)
+ 
